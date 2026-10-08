@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Code Review Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Code Review Assistant</h1>
+        <p>Enter GitHub repository details to analyze a pull request.</p>
+        
+        <div class="form-group">
+            <input type="text" id="owner" placeholder="Repository Owner (e.g., facebook)">
+            <input type="text" id="repo" placeholder="Repository Name (e.g., react)">
+            <input type="number" id="pr-number" placeholder="PR Number (e.g., 1234)">
+            <button onclick="analyzePR()">Analyze Pull Request</button>
+        </div>
+
+        <div id="loading" class="hidden">Analyzing... Please wait...</div>
+        
+        <div id="results" class="hidden">
+            <h2>Review Feedback</h2>
+            <pre id="review-content"></pre>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

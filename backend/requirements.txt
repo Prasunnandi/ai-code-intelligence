@@ -1,0 +1,12 @@
+Flask
+Flask-Cors
+pymongo
+PyJWT
+bcrypt
+requests
+chromadb
+langchain
+langchain-groq
+langchain-huggingface
+sentence-transformers
+PyGithub
