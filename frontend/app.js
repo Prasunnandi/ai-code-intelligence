@@ -1,3 +1,5 @@
+let currentDiff = "";
+
 async function analyzePR() {
     const owner = document.getElementById('owner').value;
     const repo = document.getElementById('repo').value;
@@ -9,10 +11,10 @@ async function analyzePR() {
     }
 
     document.getElementById('loading').classList.remove('hidden');
-    document.getElementById('results').classList.add('hidden');
+    document.getElementById('results-container').classList.add('hidden');
     
     try {
-        const response = await fetch('http://localhost:3000/api/review', {
+        const response = await fetch('https://ai-code-intelligence-k1kx.onrender.com/api/review', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ owner, repo, pull_number })
@@ -22,7 +24,9 @@ async function analyzePR() {
         
         if (data.success) {
             document.getElementById('review-content').textContent = data.review;
-            document.getElementById('results').classList.remove('hidden');
+            currentDiff = data.diff;
+            document.getElementById('results-container').classList.remove('hidden');
+            document.getElementById('chat-history').innerHTML = ''; // Clear chat history
         } else {
             alert('Error: ' + data.message);
         }
@@ -31,4 +35,42 @@ async function analyzePR() {
     } finally {
         document.getElementById('loading').classList.add('hidden');
     }
+}
+
+async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const message = input.value.trim();
+    if (!message) return;
+    
+    appendChatMessage('user', message);
+    input.value = '';
+    
+    const chatHistory = document.getElementById('chat-history');
+    
+    try {
+        const response = await fetch('https://ai-code-intelligence-k1kx.onrender.com/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message, diff: currentDiff })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            appendChatMessage('llm', data.reply);
+        } else {
+            appendChatMessage('llm', 'Error: ' + data.message);
+        }
+    } catch (error) {
+        appendChatMessage('llm', 'Failed to connect to backend.');
+    }
+    
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+}
+
+function appendChatMessage(role, text) {
+    const history = document.getElementById('chat-history');
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${role}`;
+    bubble.textContent = text;
+    history.appendChild(bubble);
 }
