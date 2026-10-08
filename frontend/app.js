@@ -14,7 +14,7 @@ async function analyzePR() {
     document.getElementById('results-container').classList.add('hidden');
     
     try {
-        const response = await fetch('https://ai-code-intelligence-k1kx.onrender.com/api/review', {
+        const response = await fetch('/api/review', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ owner, repo, pull_number })
@@ -48,7 +48,7 @@ async function sendChatMessage() {
     const chatHistory = document.getElementById('chat-history');
     
     try {
-        const response = await fetch('https://ai-code-intelligence-k1kx.onrender.com/api/chat', {
+        const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ message, diff: currentDiff })
